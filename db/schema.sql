@@ -3,13 +3,15 @@ CREATE DATABASE job_db;
 
 USE job_db;
 
+DROP TABLE IF EXISTS job_department;
 CREATE TABLE job_department (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL
 );
 
+DROP TABLE IF EXISTS job_role;
 CREATE TABLE job_role (
-  id INT NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   department_id  INT,
   job_details TEXT,
   title VARCHAR(30),
@@ -19,14 +21,15 @@ CREATE TABLE job_role (
   ON DELETE SET NULL
 );
 
+DROP TABLE IF EXISTS job_employee;
 CREATE TABLE job_employee (
-  id INT NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   first_name VARCHAR(30),
   last_name VARCHAR(30),
   role_id  INT,
-  FOREIGN KEY (role_id)
-  REFERENCES job_role(id)
   manager_id  INT,
+  FOREIGN KEY (role_id)
+  REFERENCES job_role(id),
   FOREIGN KEY (manager_id)
   REFERENCES job_employee(id)
   ON DELETE SET NULL

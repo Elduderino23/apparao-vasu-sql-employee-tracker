@@ -1,4 +1,4 @@
-INSERT INTO job_department (job_department)
+INSERT INTO job_department (name)
 VALUES ("Sales"),
        ("Engineering"),
        ("Finance"),
@@ -7,7 +7,7 @@ VALUES ("Sales"),
 INSERT INTO job_role (title, salary, job_details, department_id)
 VALUES ("CFO", 700000.00, "Head Sales Chief Guy", 1),
        ("CTO", 700000.00, "Head Engineer Guy", 2),
-       ("CEO", 6000000.00, "Main Guy", 3),
+       ("CEO", 800000.00, "Main Guy", 3),
        ("CLO", 700000.00, "Head Legal Guy", 4),
        ("Sales Manager", 600000.00, "Assistant To CFO", 1),
        ("Technical Engineer", 600000.00, "Assistant To CTO", 2),
