@@ -1,0 +1,8 @@
+-- INSERT INTO employee_names (name)
+-- VALUES (""),
+--        (""),
+--        (""),
+--        (""),
+--        (""),
+--        (""),
+--        ("");
