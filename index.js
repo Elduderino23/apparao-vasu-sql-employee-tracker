@@ -4,6 +4,17 @@ const consoleTables = require('console.table')
 
 const jobDataBaseArray = []
 
+const db = mysql.createConnection({
+    host: 'localhost',
+    // MySQL username,
+    user: 'root',
+    // TODO: Add MySQL password
+    password: 'liquidsnake@1',
+    database: 'job_db'
+},
+console.log(`Connected to the job_db database.`)
+);
+
 console.table("table the data") //
 
 const initialPrompt = [{
@@ -59,13 +70,13 @@ const newEmployee = [{
     
 }]
 
-function departmentSelect() {
+function start() {
     inquirer.prompt(initialPrompt).then((response) => {
         switch (response.initialQuestion) {
-            case "view all department":
+            case "view all departments":
                 departmentView()
                 break;
-            case "view all role":
+            case "view all roles":
                 roleView()
                 break;
             case "view all employees":
@@ -76,11 +87,11 @@ function departmentSelect() {
 
                 break;
             case "add a role":
-                addRole()
+                roleSelect()
 
                 break;
             case "add an employee":
-                addEmployee()
+                employeeSelect()
 
                 break;
 
@@ -97,64 +108,75 @@ function departmentSelect() {
 
                 return;
         }
-    })
+    })}
 
     function roleSelect() {
-        inquirer.prompt(initialPrompt).then((response) => {
+        inquirer.prompt(newRole).then((response) => {
+            db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)',[response.name, response.salary, response.job_details, response.addDepartment], function (err, results) {if (err){
+                console.log(err)}
+                console.table(results);
+                start()
 
-            }
-        })
+        })}
+        
+        )}
 
     function employeeSelect() {
-        inquirer.prompt(initialPrompt).then((response) => {
-
+        inquirer.prompt(newEmployee).then((response) => {
+            db.query('INSERT INTO job_employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)',[response.first_name, response.last_name,  response.role_id,  response.manager_id], function (err, results) {if (err){
+                console.log(err)}
+                console.table(results);
+                start()
             }
-        })
+        )}
 
+        )}
 
-}
+    function addDepartment (){
+        inquirer.prompt(newDepartment).then((response) => {
+            db.query('INSERT INTO job_department (name) VALUES (?)',[response.department], function (err, results) { if (err){
+                console.log(err)
+            }
+                console.table(results);
+                start()
+    })
+})}
 
 function departmentView() {
     db.query('SELECT * FROM job_department', function (err, results) {
         console.table(results);
-
-        departmentSelect()
+        start()
     })
 }
 
 function roleView() {
-    db.query('SELECT * FROM job_role', function (err, results) {
+    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_department.name FROM job_role JOIN job_department ON job_role.department_id = job_department.id', function (err, results) {
         console.table(results);
-
-        departmentSelect()
-        roleView()
+        start()
     })
 }
 
 function employeeView() {
     db.query('SELECT * FROM job_employee', function (err, results) {
         console.table(results);
-
-        departmentSelect()
-        roleView()
-        employeeSelect()
+        start()
     })
 }
 
 
-inquirer.prompt(initialPrompt)
+// const db = mysql.createConnection({
+//         host: 'localhost',
+//         // MySQL username,
+//         user: 'root',
+//         // TODO: Add MySQL password
+//         password: 'liquidsnake@1',
+//         database: 'job_db'
+//     },
+//     console.log(`Connected to the job_db database.`)
+// );
 
-const db = mysql.createConnection({
-        host: 'localhost',
-        // MySQL username,
-        user: 'root',
-        // TODO: Add MySQL password
-        password: 'liquidsnake@1',
-        database: 'job_db'
-    },
-    console.log(`Connected to the job_db database.`)
-);
+// db.query('SELECT je.id, je.department_id, je.title, je.salary, job_roles.name FROM job_employee AS je JOIN job_department ON department_id = id', function (err, results) {
+//     console.table(results);
+// })
 
-db.query('SELECT je.id, je.department_id, je.title, je.salary, job_roles.name FROM job_employee AS je JOIN job_department ON department_id = id', function (err, results) {
-    console.table(results);
-})
+start()
