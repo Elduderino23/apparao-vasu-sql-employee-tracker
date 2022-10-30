@@ -6,7 +6,7 @@ const jobDataBaseArray = []
 
 console.table("table the data") //
 
-inquirer.prompt()
+// inquirer.prompt()
 
 const initialPrompt = [{
     name: "initial question",
@@ -15,6 +15,7 @@ const initialPrompt = [{
     choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role"]
     
 }]
+inquirer.prompt(initialPrompt )
 
 const db = mysql.createConnection(
     {
