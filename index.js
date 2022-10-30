@@ -57,21 +57,6 @@ function employeeView(){
     })
 }
 
-// function userView(nextRole) {
-//     switch (nextRole) {
-//         case "job_department":
-//             departmentView()
-//             break;
-//         case "job_role":
-//             roleView()
-//             break;
-//         case "job_employee":
-//             employeeView()
-//             break;
-//         default:
-//             return
-//     }
-// }
 
 
 
