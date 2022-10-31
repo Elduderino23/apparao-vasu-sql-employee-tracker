@@ -12,7 +12,7 @@ const db = mysql.createConnection({
     password: 'liquidsnake@1',
     database: 'job_db'
 },
-console.log(`Connected to the job_db database.`)
+    console.log(`Connected to the job_db database.`)
 );
 
 console.table("table the data") //
@@ -40,11 +40,11 @@ const newRole = [{
     message: "Input salary",
     type: "input",
 
-},{
+}, {
     name: "assignDepartment",
     message: "Which department do you want to assign this role to?",
     type: "input",
-    
+
 }]
 const newEmployee = [{
     name: "firstName",
@@ -56,18 +56,18 @@ const newEmployee = [{
     message: "Input employee last name.",
     type: "input",
 
-},{
+}, {
     name: "assignRole",
     message: "Which role do you want to assign this employee to?",
     type: "input",
-        
-    
-},{
+
+
+}, {
     name: "assignEmployeeManager",
     message: "Who is this employee's manager?",
     type: "input",
-        
-    
+
+
 }]
 
 function start() {
@@ -104,43 +104,55 @@ function start() {
                 exitApp()
 
                 break;
-                default:
+            default:
 
                 return;
         }
-    })}
+    })
+}
 
-    function roleSelect() {
-        inquirer.prompt(newRole).then((response) => {
-            db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)',[response.name, response.salary, response.job_details, response.addDepartment], function (err, results) {if (err){
-                console.log(err)}
-                console.table(results);
-                start()
-
-        })}
-        
-        )}
-
-    function employeeSelect() {
-        inquirer.prompt(newEmployee).then((response) => {
-            db.query('INSERT INTO job_employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)',[response.first_name, response.last_name,  response.role_id,  response.manager_id], function (err, results) {if (err){
-                console.log(err)}
-                console.table(results);
-                start()
-            }
-        )}
-
-        )}
-
-    function addDepartment (){
-        inquirer.prompt(newDepartment).then((response) => {
-            db.query('INSERT INTO job_department (name) VALUES (?)',[response.department], function (err, results) { if (err){
+function roleSelect() {
+    inquirer.prompt(newRole).then((response) => {
+        db.query('SELECT id FROM job_role WHERE title = ?) VALUES (?,?,?,?)', 
+        db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)', [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
+            if (err) {
                 console.log(err)
             }
-                console.table(results);
-                start()
+            console.table(results);
+            start()
+
+        })
+    )}
+
+    )
+}
+
+function employeeSelect() {
+    inquirer.prompt(newEmployee).then((response) => {
+        db.query('INSERT INTO job_employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [response.first_name, response.last_name, response.role_id, response.manager_id], function (err, results) {
+            if (err) {
+                console.log(err)
+            }
+            console.table(results);
+            start()
+        }
+        )
+    }
+
+    )
+}
+
+function addDepartment() {
+    inquirer.prompt(newDepartment).then((response) => {
+        db.query('INSERT INTO job_department (name) VALUES (?)', [response.department], function (err, results) {
+            if (err) {
+                console.log(err)
+            }
+            console.table(results);
+            start()
+        })
     })
-})}
+}
 
 function departmentView() {
     db.query('SELECT * FROM job_department', function (err, results) {
@@ -180,3 +192,6 @@ function employeeView() {
 // })
 
 start()
+
+// 1. name of department
+// 2. db query such that find department name that watches "legal" and return id 
