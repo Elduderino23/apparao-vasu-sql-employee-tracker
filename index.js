@@ -159,14 +159,15 @@ function departmentView() {
 }
 
 function roleView() {
-    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_role.job_details, job_department.name FROM job_role JOIN job_department ON job_role.department_id = job_department.id ORDER BY job_role.role_id', function (err, results) {
+    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_role.department_id, job_department.name FROM job_department JOIN job_role ON job_department.id = job_role.department_id ORDER BY job_role.id' , function (err, results) {
+        console.log()
         console.table(results);
         start()
     })
 }
 
 function employeeView() {
-    db.query('SELECT job_employee.id, job_employee.first_name, job_employee.last_name, job_employee.role_id, job_employee.manager_id, job_role.salary FROM job_employee JOIN job_role ON job_employee.role_id = job_employee.id ORDER BY job_employee.role_id', function (err, results) {
+    db.query('SELECT job_employee.id, job_employee.first_name, job_employee.last_name, job_employee.role_id, job_employee.manager_id, job_role.salary FROM job_employee JOIN job_role ON job_employee.role_id = job_role.id ORDER BY job_employee.manager_id', function (err, results) {
         console.table(results);
         start()
     })
@@ -189,3 +190,6 @@ function employeeView() {
 // })
 
 start()
+
+
+// 'SELECT job_role.id, job_role.title, job_role.salary, job_role.job_details, job_department.name FROM job_role JOIN job_department ON job_role.department_id = job_department.id ORDER BY job_role.role_id'
