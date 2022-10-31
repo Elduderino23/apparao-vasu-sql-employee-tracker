@@ -43,7 +43,8 @@ const newRole = [{
 }, {
     name: "assignDepartment",
     message: "Which department do you want to assign this role to?",
-    type: "input",
+    type: "list",
+    choices: ["Sales", "Engineering", "Finance", "Legal"]
 
 }]
 const newEmployee = [{
@@ -113,8 +114,11 @@ function start() {
 
 function roleSelect() {
     inquirer.prompt(newRole).then((response) => {
-        db.query('SELECT id FROM job_role WHERE title = ?) VALUES (?,?,?,?)', 
-        db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)', [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
+    //     db.query('SELECT id FROM job_role WHERE title = ?) VALUES (?,?,?,?)', 
+        // db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)',
+         [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
+            if (response[i].dept_name === results.dept.name)
+
             if (err) {
                 console.log(err)
             }
@@ -122,9 +126,9 @@ function roleSelect() {
             start()
 
         })
-    )}
+    // )}
 
-    )
+    // )
 }
 
 function employeeSelect() {
