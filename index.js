@@ -43,8 +43,7 @@ const newRole = [{
 }, {
     name: "assignDepartment",
     message: "Which department do you want to assign this role to?",
-    type: "list",
-    choices: ["Sales", "Engineering", "Finance", "Legal"]
+    type: "input",
 
 }]
 const newEmployee = [{
@@ -114,11 +113,7 @@ function start() {
 
 function roleSelect() {
     inquirer.prompt(newRole).then((response) => {
-    //     db.query('SELECT id FROM job_role WHERE title = ?) VALUES (?,?,?,?)', 
-        // db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)',
-         [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
-            if (response[i].dept_name === results.dept.name)
-
+        db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)', [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
             if (err) {
                 console.log(err)
             }
@@ -126,10 +121,8 @@ function roleSelect() {
             start()
 
         })
-    // )}
+})}
 
-    // )
-}
 
 function employeeSelect() {
     inquirer.prompt(newEmployee).then((response) => {
@@ -166,14 +159,14 @@ function departmentView() {
 }
 
 function roleView() {
-    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_department.name FROM job_role JOIN job_department ON job_role.department_id = job_department.id', function (err, results) {
+    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_role.job_details, job_department.name FROM job_role JOIN job_department ON job_role.department_id = job_department.id ORDER BY job_role.role_id', function (err, results) {
         console.table(results);
         start()
     })
 }
 
 function employeeView() {
-    db.query('SELECT * FROM job_employee', function (err, results) {
+    db.query('SELECT job_employee.id, job_employee.first_name, job_employee.last_name, job_employee.role_id, job_employee.manager_id, job_role.salary FROM job_employee JOIN job_role ON job_employee.role_id = job_employee.id ORDER BY job_employee.role_id', function (err, results) {
         console.table(results);
         start()
     })
@@ -196,6 +189,3 @@ function employeeView() {
 // })
 
 start()
-
-// 1. name of department
-// 2. db query such that find department name that watches "legal" and return id 
