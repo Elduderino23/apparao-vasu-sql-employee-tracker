@@ -5,13 +5,13 @@ const consoleTables = require('console.table')
 const jobDataBaseArray = []
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    // MySQL username,
-    user: 'root',
-    // TODO: Add MySQL password
-    password: 'liquidsnake@1',
-    database: 'job_db'
-},
+        host: 'localhost',
+        // MySQL username,
+        user: 'root',
+        // TODO: Add MySQL password
+        password: 'liquidsnake@1',
+        database: 'job_db'
+    },
     console.log(`Connected to the job_db database.`)
 );
 
@@ -58,15 +58,31 @@ const newEmployee = [{
 
 }, {
     name: "assignRole",
-    message: "Which role do you want to assign this employee to?",
+    message: "Which role do you want to assign this employee to? Numbers only",
     type: "input",
 
 
 }, {
     name: "assignEmployeeManager",
-    message: "Who is this employee's manager?",
+    message: "Who is this employee's manager? Numbers only",
     type: "input",
 
+
+}]
+const clearRole = [{
+    name: "first_name",
+    message: "Input employee first name.",
+    type: "input",
+
+}, {
+    name: "last_name",
+    message: "Input employee last name.",
+    type: "input",
+
+}, {
+    name: "role_id",
+    message: "Which role do you want to assign this employee to? Numbers only",
+    type: "input",
 
 }]
 
@@ -96,7 +112,7 @@ function start() {
                 break;
 
             case "update an employee role":
-                addDetail()
+                updateRole()
 
                 break;
 
@@ -113,7 +129,7 @@ function start() {
 
 function roleSelect() {
     inquirer.prompt(newRole).then((response) => {
-        db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,?)', [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
+        db.query('INSERT INTO job_role (title, salary, job_details, department_id) VALUES (?,?,?,(SELECT id FROM job_department WHERE name = ?))', [response.name, response.salary, response.job_details, response.assignDepartment], function (err, results) {
             if (err) {
                 console.log(err)
             }
@@ -121,20 +137,20 @@ function roleSelect() {
             start()
 
         })
-})}
+    })
+}
 
 
 function employeeSelect() {
     inquirer.prompt(newEmployee).then((response) => {
-        db.query('INSERT INTO job_employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [response.first_name, response.last_name, response.role_id, response.manager_id], function (err, results) {
-            if (err) {
-                console.log(err)
-            }
-            console.table(results);
-            start()
+            db.query(`INSERT INTO job_employee (first_name, last_name, role_id, manager_id) VALUES ("${response.firstName}","${response.lastName}","${response.assignRole}", "${response.assignEmployeeManager}")`, function (err, results) {
+                if (err) {
+                    console.log(err)
+                }
+                console.table(results);
+                start()
+            })
         }
-        )
-    }
 
     )
 }
@@ -159,7 +175,7 @@ function departmentView() {
 }
 
 function roleView() {
-    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_role.department_id, job_department.name FROM job_department JOIN job_role ON job_department.id = job_role.department_id ORDER BY job_role.id' , function (err, results) {
+    db.query('SELECT job_role.id, job_role.title, job_role.salary, job_role.department_id, job_department.name FROM job_department JOIN job_role ON job_department.id = job_role.department_id ORDER BY job_role.id', function (err, results) {
         console.log()
         console.table(results);
         start()
@@ -173,6 +189,26 @@ function employeeView() {
     })
 }
 
+function updateRole() {
+    inquirer.prompt(clearRole).then(response => {
+        console.log(response.role_id)
+        console.log(response.first_name)
+        console.log(response.last_name)
+        db.query("UPDATE job_employee SET role_id = ? WHERE first_name = ? AND last_name = ?",[response.role_id, response.first_name, response.last_name], function (err, results) {
+            console.table(results);
+            start()
+        })
+    })
+
+
+}
+
+function exitApp() {
+    process.exit()
+
+}
+
+// clearRole is the name
 
 // const db = mysql.createConnection({
 //         host: 'localhost',
