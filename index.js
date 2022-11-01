@@ -183,7 +183,7 @@ function roleView() {
 }
 
 function employeeView() {
-    db.query('SELECT job_employee.id, job_employee.first_name, job_employee.last_name, job_employee.role_id, job_employee.manager_id, job_role.salary FROM job_employee JOIN job_role ON job_employee.role_id = job_role.id ORDER BY job_employee.manager_id', function (err, results) {
+    db.query('SELECT job_employee.id, job_employee.first_name, job_employee.last_name, job_role.title AS description, job_employee.manager_id, job_role.salary, manager.first_name AS manager_name FROM job_employee JOIN job_role ON job_employee.role_id = job_role.id LEFT JOIN job_employee manager ON manager.id = job_employee.manager_id ORDER BY job_employee.manager_id', function (err, results) {
         console.table(results);
         start()
     })
